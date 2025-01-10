@@ -46,8 +46,8 @@ const Navbar = () => {
   );
   return (
     <div>
-      <div className="navbar bg-base-100 shadow-sm">
-        <div className="navbar-start">
+      <div className="navbar bg-base-100 shadow-sm ">
+        <div className="navbar-start ">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
               <svg
@@ -73,11 +73,7 @@ const Navbar = () => {
             </ul>
           </div>
           <a className="btn btn-ghost text-xl" href="/">
-            <img
-              src="/shop.png"
-              alt="logo"
-              className="h-6 lg:h-12 pr-1 mx-auto"
-            />
+            <img src="/shop.png" alt="logo" className="h-6 pr-1 mx-auto" />
             SE Souvenir Shop
           </a>
         </div>
