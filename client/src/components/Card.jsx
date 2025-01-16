@@ -1,4 +1,4 @@
-import { use, useState } from "react";
+import { useState } from "react";
 
 const Card = ({ item }) => {
   const { id, name, image, description, category, price } = item;
