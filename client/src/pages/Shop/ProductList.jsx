@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ProductService from "../../services/product.service";
 import Card from "../../components/Card";
+import { useSearchParams } from "react-router";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -10,6 +11,13 @@ const ProductList = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryQuery = searchParams.get("category") || "all";
+  const itemsPerPageQuery = searchParams.get("itemsPerPage") || 4;
+  useEffect(() => {
+    setSelectedCategory(categoryQuery);
+    setItemsPerPage(itemsPerPageQuery);
+  }, [categoryQuery]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,6 +40,7 @@ const ProductList = () => {
         : products.filter((item) => item.category === category);
     setFilteredItems(filtered);
     handleSortChange(sortOption, filtered);
+    setSearchParams({ ["category"]: category });
     setSelectedCategory(category);
   };
 
