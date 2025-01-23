@@ -9,20 +9,21 @@ const ProductList = () => {
   const [filteredItems, setFilteredItems] = useState([]);
   const [sortOption, setSortOption] = useState("default");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchParams, setSearchParams] = useSearchParams();
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchParams, setSearchParams] = useSearchParams();
   const categoryQuery = searchParams.get("category") || "all";
-  const itemsPerPageQuery = searchParams.get("itemsPerPage") || 4;
+  const itemsPerPageQuery = searchParams.get("itemsPerPage") || 8;
+
   useEffect(() => {
     setSelectedCategory(categoryQuery);
     setItemsPerPage(itemsPerPageQuery);
-  }, [categoryQuery]);
+  }, [categoryQuery, itemsPerPageQuery]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await ProductService.getAllProduct();
-      //console.log(response);
+      const response = await ProductService.getAllProducts();
+      //console.log("aaaa", response);
       setProducts(response.data);
       setFilteredItems(response.data);
       setCategories([
