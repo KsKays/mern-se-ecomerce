@@ -47,8 +47,12 @@ const Profile = () => {
         >
           <div className="w-10 rounded-full">
             {user?.photoURL ? (
-              <div className="w-10 rounded-full">
-                <img src={user.photoURL} alt="User Photo Profile" />
+              <div className="w-10 h-10 rounded-full overflow-hidden">
+                <img
+                  src={user.photoURL}
+                  alt="User Photo Profile"
+                  className="w-full h-full object-cover"
+                />
               </div>
             ) : (
               <img

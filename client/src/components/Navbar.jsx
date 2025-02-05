@@ -3,7 +3,7 @@ import Profile from "./Profile";
 import Modal from "./Modal";
 import { AuthContext } from "../context/Authcontext";
 import { FaUserCircle } from "react-icons/fa";
-import UserProfile from "./UserProfile";
+//import UserProfile from "./UserProfile";
 
 const Navbar = () => {
   const { user } = useContext(AuthContext);

@@ -63,6 +63,7 @@ const UpdateProfile = () => {
           name: data.name,
           imageURL: data.imageURL,
         });
+        window.location.reload();
       } catch (error) {
         console.error("Error updating profile:", error.message);
         alert("Failed to update profile: " + error.message);
@@ -121,7 +122,7 @@ const UpdateProfile = () => {
             <img
               src={initialData.imageURL}
               alt="User Avatar"
-              className="w-24 h-24 mx-auto rounded-full mt-4"
+              className="w-24 h-24 mx-auto rounded-full mt-4 object-cover"
             />
           )}
           <p className="mt-2 font-medium">{initialData.name}</p>

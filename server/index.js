@@ -4,6 +4,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const productRouter = require("./routers/product.router");
 const userRouter = require("./routers/user.router");
+const cartRouter = require("./routers/cart.router");
 const { applyTimestamps } = require("./models/Product");
 const app = express();
 const BASE_URL = process.env.BASE_URL; //
@@ -29,9 +30,10 @@ app.get("/", (req, res) => {
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
 //use Router
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/v1/auth", userRouter);
 app.use("/api/v1/product", productRouter);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api/v1/cart", cartRouter);
 
 app.listen(PORT, () => {
   console.log("Server Running on http://localhost:" + PORT); //เชื่อมกับ PORT
