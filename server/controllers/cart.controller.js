@@ -89,9 +89,17 @@ exports.getAllCartItems = async (req, res) => {
    *   }
    * }
    */
-  const cartsItems = await CartModel.find();
-  //Select * FROM POST WHERE POST.author = USER._id
-  res.json(cartsItems);
+  try {
+    const cartItems = await CartModel.find();
+    if (!cartItems || cartItems.length === 0) {
+      return res.status(404).json({ message: "Cart not found!" });
+    }
+    res.json(cartItems);
+  } catch {
+    res.status(500).json({
+      message: "Something error occurred while retrieving the cart!",
+    });
+  }
 };
 
 //getCartItemsByEmail

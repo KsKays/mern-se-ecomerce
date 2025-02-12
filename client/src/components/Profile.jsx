@@ -1,13 +1,15 @@
 import React, { useCallback, useContext } from "react";
 import { AuthContext } from "../context/Authcontext";
+import useCart from "../hooks/useCart";
 
 const Profile = () => {
   const { user, logout } = useContext(AuthContext);
+  const [cart, setCart] = useCart();
 
   return (
     <div>
       <div className="dropdown dropdown-end">
-        <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+        <a href="/cart" role="button" className="btn btn-ghost btn-circle">
           <div className="indicator">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -25,14 +27,16 @@ const Profile = () => {
             </svg>
             <span className="badge badge-sm indicator-item">8</span>
           </div>
-        </div>
+        </a>
         <div
           tabIndex={0}
           className="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-52 shadow"
         >
           <div className="card-body">
             <span className="text-lg font-bold">8 Items</span>
-            <span className="text-info">Subtotal: $999</span>
+            <span className="badge badge-sm indicator-item">
+              {cart.length || 0}
+            </span>
             <div className="card-actions">
               <button className="btn btn-primary btn-block">View cart</button>
             </div>
@@ -49,7 +53,7 @@ const Profile = () => {
             {user?.photoURL ? (
               <div className="w-10 h-10 rounded-full overflow-hidden">
                 <img
-                  src={user.photoURL}
+                  src={user?.photoURL}
                   alt="User Photo Profile"
                   className="w-full h-full object-cover"
                 />

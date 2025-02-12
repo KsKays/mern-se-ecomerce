@@ -30,7 +30,7 @@ const Modal = ({ name }) => {
           showConfirmButton: false,
           timer: 1500,
         });
-        document.getElementById("login").close();
+        document.getElementById("signin").close();
         navigate(from, { replace: true });
       })
       .catch((error) => {
