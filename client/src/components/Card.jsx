@@ -6,14 +6,13 @@ import useCart from "../hooks/useCart";
 import Swal from "sweetalert2";
 
 const Card = ({ item }) => {
-  const { id, name, image, description, category, price } = item;
+  const { _id, name, image, description, category, price } = item;
   const { user } = useContext(AuthContext);
   const [cart, refetch] = useCart();
   const [isHeartFilled, setIsHeartFilled] = useState(false);
   const handleHeartClick = () => {
     setIsHeartFilled(!isHeartFilled);
   };
-
 
   const handleAddToCart = async () => {
     if (!user || !user.email) {

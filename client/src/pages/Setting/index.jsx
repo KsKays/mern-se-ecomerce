@@ -1,83 +1,134 @@
-/* eslint-disable no-unused-vars */
-import { useContext } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { AuthContext } from "../../context/AuthContext";
-import Swal from "sweetalert2";
+import { getAuth, updateProfile } from "firebase/auth";
 
-const Index = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const from = location?.state?.from?.pathname || "/";
-  const { updateUserProfile, user } = useContext(AuthContext);
+const UpdateProfile = () => {
+  const auth = getAuth(); // Get Firebase Auth instance
+  const user = auth.currentUser; // Get the currently signed-in user
+  const [initialData, setInitialData] = useState({ name: "", imageURL: "" });
+
+  // Load user's current profile data
+  useEffect(() => {
+    if (user) {
+      setInitialData({
+        name: user.displayName || "",
+        imageURL: user.photoURL || "",
+      });
+    }
+  }, [user]);
+
   const {
     register,
     handleSubmit,
-    watch,
+    setValue,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => {
-    const name = data.name;
-    const photoURL = data.photoURL;
-    updateUserProfile({ name, photoURL })
-      .then(() => {
-        // alert('Profile Updated!')
-        Swal.fire({
-          icon: "success",
-          title: "Profile Updated!",
-          showConfirmButton: false,
-          timer: 1500,
+
+  // Pre-fill form fields with current user data
+  useEffect(() => {
+    setValue("name", initialData.name);
+    setValue("imageURL", initialData.imageURL);
+  }, [initialData, setValue]);
+
+  const onSubmit = async (data) => {
+    if (user) {
+      try {
+        // ตรวจสอบว่าไม่มีการเปลี่ยนแปลงข้อมูล
+        if (
+          data.name === initialData.name &&
+          data.imageURL === initialData.imageURL
+        ) {
+          alert("No changes detected. Profile not updated.");
+          return; // ไม่ทำการอัปเดต
+        }
+
+        // อัปเดตข้อมูลเฉพาะชื่อถ้าชื่อมีการเปลี่ยนแปลง
+        if (data.name !== initialData.name) {
+          await updateProfile(user, {
+            displayName: data.name,
+          });
+        }
+
+        // อัปเดตภาพโปรไฟล์หาก URL มีการเปลี่ยนแปลง
+        if (data.imageURL !== initialData.imageURL) {
+          await updateProfile(user, {
+            photoURL: data.imageURL,
+          });
+        }
+
+        alert("Profile updated successfully!");
+
+        // อัปเดตค่าที่ใช้แสดงใน UI
+        setInitialData({
+          name: data.name,
+          imageURL: data.imageURL,
         });
-
-        navigate(from, { replace: true });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      } catch (error) {
+        console.error("Error updating profile:", error.message);
+        alert("Failed to update profile: " + error.message);
+      }
+    } else {
+      alert("No user is currently signed in.");
+    }
   };
+
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-        <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
-          <h3 className="font-bold">Update Your Profile</h3>
-          <div className="form-control">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-full max-w-md bg-white p-6 rounded shadow-md">
+        <h2 className="text-2xl font-bold text-center mb-6">User Profile</h2>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Full Name */}
+          <div className="form-control mb-4">
             <label className="label">
-              <span className="label-text">Name</span>
+              <span className="label-text">Full Name</span>
             </label>
             <input
               type="text"
-              placeholder="name"
-              className="input input-bordered"
-              defaultValue={user?.displayName || ""}
-              required
-              {...register("name")}
+              placeholder="Enter your full name"
+              className="input input-bordered w-full"
+              {...register("name", { required: "Name is required" })}
             />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+            )}
           </div>
-          <div className="form-control">
+
+          {/* Image URL */}
+          <div className="form-control mb-4">
             <label className="label">
-              <span className="label-text">Upload Profile Photo</span>
+              <span className="label-text">Image URL</span>
             </label>
             <input
-              type="text"
-              placeholder="Photo URL"
-              className="input input-bordered"
-              defaultValue={user?.photoURL || ""}
-              required
-              {...register("photoURL")}
+              type="url"
+              placeholder="Enter the URL of your image"
+              className="input input-bordered w-full"
+              {...register("imageURL")}
             />
           </div>
 
+          {/* Submit Button */}
           <div className="form-control mt-6">
-            <input
-              type="submit"
-              value="Update"
-              className="btn bg-red text-white"
-            />
+            <button className="btn bg-red w-full text-white">
+              Update Profile
+            </button>
           </div>
         </form>
+
+        {/* Display current profile */}
+        <div className="mt-6 text-center">
+          <h3 className="text-xl font-bold">Current Profile</h3>
+          {initialData.imageURL && (
+            <img
+              src={initialData.imageURL}
+              alt="User Avatar"
+              className="w-24 h-24 mx-auto rounded-full mt-4"
+            />
+          )}
+          <p className="mt-2 font-medium">{initialData.name}</p>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Index;
+export default UpdateProfile;

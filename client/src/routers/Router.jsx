@@ -6,6 +6,7 @@ import Cart from "../pages/Cart/Index";
 import SignUp from "../components/SignUp";
 import SignIn from "../components/SignIn";
 import UpdateProfile from "../pages/Setting/index";
+import ProtectPage from "../pages/ProtectPage/Index";
 
 const router = createBrowserRouter([
   {
@@ -22,7 +23,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/cart",
-        element: <Cart />,
+        element: (
+          <ProtectPage>
+            <Cart />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/updateprofile",
+        element: (
+          <ProtectPage>
+            <UpdateProfile />
+          </ProtectPage>
+        ),
       },
       {
         path: "/signup",
@@ -31,10 +44,6 @@ const router = createBrowserRouter([
       {
         path: "/signin",
         element: <SignIn />,
-      },
-      {
-        path: "/updateprofile",
-        element: <UpdateProfile />,
       },
     ],
   },

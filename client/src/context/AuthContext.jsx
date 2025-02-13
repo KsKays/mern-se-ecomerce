@@ -12,9 +12,11 @@ import {
   GithubAuthProvider,
   FacebookAuthProvider,
 } from "firebase/auth";
+import { set } from "react-hook-form";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const auth = getAuth(app);
 
   const createUser = (email, password) => {
@@ -54,6 +56,7 @@ const AuthProvider = ({ children }) => {
     signUpWithGoogle,
     signUpWithGithub,
     signUpWithFacebook,
+    isLoading,
   };
 
   //check if user is logged in
@@ -62,7 +65,10 @@ const AuthProvider = ({ children }) => {
       setUser(user);
       if (currentUser) {
         setUser(currentUser);
+        setIsLoading(false);
       }
+
+      setIsLoading(false);
     });
     return () => {
       return unsubscribe();

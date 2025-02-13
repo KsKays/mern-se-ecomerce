@@ -8,6 +8,58 @@ import { AuthContext } from "../../context/AuthContext";
 const Index = () => {
   const [cart, refetch] = useCart();
   const { user } = useContext(AuthContext);
+
+  //คำนวน Total Price
+  // let totalPrice = 0;
+  // cart.forEach((item) => {
+  //   totalPrice += item.quantity * item.price;
+  // });
+
+  const totalPrice = (items) => {};
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("th-TH", {
+      style: "currency",
+      currency: "THB",
+    }).format(price);
+  };
+
+  const handleDeleteItem = async (cartItem) => {
+    Swal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      cancelButtonColor: "#d33",
+      confirmButtonColor: "#3085d6",
+      showConfirmButton: true,
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await CartService.deleteCartItemById(cartItem._id);
+
+          if (response.status === 200) {
+            refetch(); // อัปเดตข้อมูลตะกร้าใหม่
+            Swal.fire({
+              icon: "success",
+              title: "Deleted!",
+              text: "Item has been removed from your cart.",
+              timer: 1500,
+              showConfirmButton: false,
+            });
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error.message,
+          });
+        }
+      }
+    });
+  };
+
   const handleClearCart = async () => {
     Swal.fire({
       icon: "warning",
@@ -42,42 +94,72 @@ const Index = () => {
       }
     });
   };
-  const handleDeleteItem = async (cartItem) => {
-    Swal.fire({
-      icon: "warning",
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      showCancelButton: true,
-      cancelButtonColor: "#d33",
-      confirmButtonColor: "#3085d6",
-      showConfirmButton: true,
-      confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await CartService.deleteCartItemById(cartItem._id);
-          if (response.status === 200) {
-            refetch();
-            Swal.fire({
-              icon: "success",
-              title: "Deleted!",
-              text: response.message,
-              timer: 1500,
-              showConfirmButton: false,
-            });
-          }
-        } catch (error) {
+
+  const handleIncrease = async (cartItem) => {
+    if (cartItem.quantity + 1 <= 10) {
+      try {
+        const response = await CartService.updateCartItem(cartItem._id, {
+          quantity: cartItem.quantity + 1,
+        });
+
+        if (response.status === 200) {
+          refetch();
           Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: error.message,
+            icon: "success",
+            title: "Quantity Increased!",
+            text: response.message,
+            timer: 1000,
+            showConfirmButton: false,
           });
         }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.message,
+        });
       }
-    });
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Quantity limit reached!",
+        text: "You can't add more than 10 items.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    }
   };
-  const handleIncrease = async () => {};
-  const handleDecrease = async () => {};
+
+  const handleDecrease = async (cartItem) => {
+    if (cartItem.quantity > 1) {
+      try {
+        const response = await CartService.updateCartItem(cartItem._id, {
+          quantity: cartItem.quantity - 1,
+        });
+
+        if (response.status === 200) {
+          refetch();
+          Swal.fire({
+            icon: "success",
+            title: "Quantity Decreased!",
+            text: response.message,
+            timer: 1000,
+            showConfirmButton: false,
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.message,
+        });
+      }
+    } else {
+      // ถ้าสินค้ามีแค่ 1 ชิ้นให้ถามก่อนลบ
+      handleDeleteItem(cartItem);
+    }
+  };
+
   return (
     <div>
       <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
@@ -147,15 +229,17 @@ const Index = () => {
                           {cartItem.quantity}
                           <button
                             className="btn btn-xs mr-2"
-                            onClick={handleIncrease}
+                            onClick={() => handleIncrease(cartItem._id)}
                           >
                             +
                           </button>
                         </div>
                       </td>
-                      <td className="text-center">{cartItem.price}</td>
                       <td className="text-center">
-                        {cartItem.quantity * cartItem.price}
+                        {formatPrice(cartItem.price)}
+                      </td>
+                      <td className="text-center">
+                        {formatPrice(cartItem.quantity * cartItem.price)}
                       </td>
                       <td className="text-center">
                         <button onClick={() => handleDeleteItem(cartItem)}>
@@ -166,11 +250,25 @@ const Index = () => {
                   ))}
               </tbody>
             </table>
+            <hr />
+            <div className="flex flex-col md:flex-row justtify-between items-start my-12 gap-8">
+              <div className="md:w-1/2 space-y-3">
+                <h3 className="text-lg font-semibold">Customer Details</h3>
+                <p>Name:{user?.displayName}</p>
+                <p>Email:{user?.email}</p>
+                <p>User Id:{user?.uid}</p>
+              </div>
+              <div className="md:w-1/2 space-y-3">
+                <h3 className="text-lg font-semibold">Shopping</h3>
+                <p>Total Items:{cart.length}</p>
+                <p>Total Price:{formatPrice(totalPrice)}</p>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-20 space-y-6">
             <svg
-              className="w-24 h-24 text-red-500 animate-bounce"
+              className="w-24 h-24 text-red-500 "
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
