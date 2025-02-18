@@ -7,12 +7,17 @@ import SignUp from "../components/SignUp";
 import SignIn from "../components/SignIn";
 import UpdateProfile from "../pages/Setting/index";
 import ProtectPage from "../pages/ProtectPage/Index";
+import DashBoardLayout from "../layouts/DashBoardLayout";
+import Dashboard from "../pages/Dashboard/Index";
+import AddProduct from "../pages/AddProduct/Index";
+import ManageItems from "../pages/ManageItems/Index"; 
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
     children: [
+     
       {
         path: "/",
         element: <Home />,
@@ -47,6 +52,25 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "dashboard",
+    element: <DashBoardLayout />,
+    children: [
+      {
+        path: "",
+        element: <Dashboard/>,
+      },
+      {
+        path: "add-product",
+        element: <AddProduct/>,
+      },
+       {
+        path: "manage-items",
+        element: <ManageItems/>,
+      }
+    ]
+      
+  }
 ]);
 
 export default router;

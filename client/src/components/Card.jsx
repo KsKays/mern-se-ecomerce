@@ -72,7 +72,7 @@ const Card = ({ item }) => {
       </figure>
       <div className="card-body">
         <h2 className="card-title">{name}</h2>
-        <p>{description}</p>
+        <p className="line-clamp-4">{description}</p>
         <div className="card-actions justify-between items-center mt-2">
           <h5 className="font-bold">
             {price}
