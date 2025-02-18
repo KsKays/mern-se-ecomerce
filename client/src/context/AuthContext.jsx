@@ -12,7 +12,6 @@ import {
   GithubAuthProvider,
   FacebookAuthProvider,
 } from "firebase/auth";
-import { set } from "react-hook-form";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

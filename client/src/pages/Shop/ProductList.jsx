@@ -23,6 +23,7 @@ const ProductList = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await ProductService.getAllProducts();
+      
       //console.log("aaaa", response);
       setProducts(response.data);
       setFilteredItems(response.data);

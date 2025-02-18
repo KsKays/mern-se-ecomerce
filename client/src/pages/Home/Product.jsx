@@ -21,7 +21,6 @@ const Product = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await ProductService.getAllProducts();
-      //console.log("API :", response);
       const data = response.data;
       const special = data.filter((item) => item.category === "gadget");
       setProducts(special);

@@ -10,12 +10,10 @@ const Index = () => {
   const { user } = useContext(AuthContext);
 
   //คำนวน Total Price
-  // let totalPrice = 0;
-  // cart.forEach((item) => {
-  //   totalPrice += item.quantity * item.price;
-  // });
-
-  const totalPrice = (items) => {};
+  let totalPrice = 0;
+  for (let index = 0; index < cart.length; index++) {
+    totalPrice += cart[index].quantity * cart[index].price;
+  }
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("th-TH", {
@@ -95,57 +93,84 @@ const Index = () => {
     });
   };
 
+  // const handleIncrease = async (cartItem) => {
+  //   if (cartItem.quantity + 1 <= 10) {
+  //     try {
+  //       const response = await CartService.updateCartItem(cartItem._id, {
+  //         quantity: cartItem.quantity + 1,
+  //       });
+  //       if (response.status === 200) {
+  //         refetch();
+  //       }
+  //     } catch (error) {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Error",
+  //         text: error.message,
+  //       });
+  //     }
+  //   } else {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: "Maximum quantity is 10",
+  //     });
+  //   }
+  // };
+
   const handleIncrease = async (cartItem) => {
     if (cartItem.quantity + 1 <= 10) {
       try {
         const response = await CartService.updateCartItem(cartItem._id, {
           quantity: cartItem.quantity + 1,
         });
-
         if (response.status === 200) {
           refetch();
-          Swal.fire({
-            icon: "success",
-            title: "Quantity Increased!",
-            text: response.message,
-            timer: 1000,
-            showConfirmButton: false,
-          });
         }
       } catch (error) {
         Swal.fire({
           icon: "error",
-          title: "Error",
-          text: error.message,
+          title: "Oops...",
+          text: error.response?.data?.message || "Something went wrong!",
         });
       }
     } else {
       Swal.fire({
         icon: "warning",
-        title: "Quantity limit reached!",
-        text: "You can't add more than 10 items.",
-        timer: 1500,
-        showConfirmButton: false,
+        title: "Item Max product",
+        text: "The product is full.",
       });
     }
   };
-
+  
+  // const handleDecrease = async (cartItem) => {
+  //   if (cartItem.quantity > 1) {
+  //     try {
+  //       const response = await CartService.updateCartItem(cartItem._id, {
+  //         quantity: cartItem.quantity - 1,
+  //       });
+  //       if (response.status === 200) {
+  //         refetch();
+  //       }
+  //     } catch (error) {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Error",
+  //         text: error.message,
+  //       });
+  //     }
+  //   } else {
+  //     handleDeleteItem(cartItem); 
+  //   }
+  // };
   const handleDecrease = async (cartItem) => {
     if (cartItem.quantity > 1) {
       try {
         const response = await CartService.updateCartItem(cartItem._id, {
           quantity: cartItem.quantity - 1,
         });
-
         if (response.status === 200) {
           refetch();
-          Swal.fire({
-            icon: "success",
-            title: "Quantity Decreased!",
-            text: response.message,
-            timer: 1000,
-            showConfirmButton: false,
-          });
         }
       } catch (error) {
         Swal.fire({
@@ -155,10 +180,10 @@ const Index = () => {
         });
       }
     } else {
-      // ถ้าสินค้ามีแค่ 1 ชิ้นให้ถามก่อนลบ
       handleDeleteItem(cartItem);
     }
   };
+  
 
   return (
     <div>
@@ -222,7 +247,7 @@ const Index = () => {
                         <div className="space-x-6 text-center">
                           <button
                             className="btn btn-xs mr-6"
-                            onClick={handleDecrease}
+                            onClick={() => handleDecrease(cartItem)}
                           >
                             -
                           </button>
@@ -262,19 +287,20 @@ const Index = () => {
                 <h3 className="text-lg font-semibold">Shopping</h3>
                 <p>Total Items:{cart.length}</p>
                 <p>Total Price:{formatPrice(totalPrice)}</p>
+                <button className="text-white bg-red btn">Process Checkout</button>
               </div>
             </div>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-20 space-y-6">
-            <svg
+            {/* <svg
               className="w-24 h-24 text-red-500 "
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
             >
               <path d="M7 18c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V8H7v10zM21 6h-4.18l-1.4-2.8A1.993 1.993 0 0 0 13.42 2H10.6c-.78 0-1.48.45-1.8 1.2L7.4 6H3c-.55 0-1 .45-1 1s.45 1 1 1h1v10c0 2.21 1.79 4 4 4h8c2.21 0 4-1.79 4-4V8h1c.55 0 1-.45 1-1s-.45-1-1-1z" />
-            </svg>
+            </svg> */}
             <div className="text-center space-y-2">
               <h2 className="text-3xl font-bold text-red-500">
                 Shopping Cart is Empty!
