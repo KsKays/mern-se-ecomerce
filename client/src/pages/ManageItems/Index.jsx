@@ -13,10 +13,8 @@ const ManageItems = () => {
     price: '',
     category: ''
   });
+  const [imageFile, setImageFile] = useState(null);  // State for managing new image file
 
-  const categories = ['Electronics', 'Books', 'Clothing', 'Home', 'Toys'];
-
-  // Load products from API
   useEffect(() => {
     loadProducts();
   }, []);
@@ -31,20 +29,19 @@ const ManageItems = () => {
       });
   };
 
-  // Open modal to edit product
   const handleEdit = (product) => {
     setEditingProduct({
       _id: product._id,
       name: product.name,
       description: product.description,
-      image: null,
+      image: product.image, // Keep existing image URL for display
       price: product.price,
       category: product.category
     });
+    setImageFile(null);  // Clear any previously selected image file
     setIsModalOpen(true);
   };
 
-  // Delete product
   const handleDelete = (id) => {
     Swal.fire({
       title: 'Are you sure?',
@@ -69,21 +66,30 @@ const ManageItems = () => {
     });
   };
 
-  // Update product
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      setImageFile(e.target.files[0]);  // Set new image file
+      setEditingProduct({
+        ...editingProduct,
+        image: URL.createObjectURL(e.target.files[0]) // Update preview image
+      });
+    }
+  };
+
   const handleUpdate = () => {
     const formData = new FormData();
     formData.append('name', editingProduct.name);
     formData.append('description', editingProduct.description);
-    if (editingProduct.image) {
-      formData.append('image', editingProduct.image);
+    if (imageFile) {
+      formData.append('image', imageFile);
     }
     formData.append('price', editingProduct.price);
-    formData.append('category', editingProduct.category);
+    formData.append('category', editingProduct.category); // Update the category directly
 
     ProductService.updateProduct(editingProduct._id, formData)
       .then(() => {
-        setProducts(products.map(product => 
-          product._id === editingProduct._id ? { ...product, ...editingProduct } : product
+        setProducts(products.map(product =>
+          product._id === editingProduct._id ? { ...product, ...editingProduct, image: editingProduct.image } : product
         ));
         setIsModalOpen(false);
         Swal.fire('Updated!', 'Product has been updated successfully.', 'success');
@@ -120,15 +126,15 @@ const ManageItems = () => {
                 <td className="border p-3">{product.price}</td>
                 <td className="border p-3">{product.category}</td>
                 <td className="border p-3 text-center">
-                  <div className="flex">
+                  <div className="flex justify-center space-x-2">
                     <button
-                      className="btn btn-active btn-primary mr-2"
+                      className="btn btn-primary"
                       onClick={() => handleEdit(product)}
                     >
                       Edit
                     </button>
                     <button
-                      className="btn btn-outline btn-error"
+                      className="btn btn-error"
                       onClick={() => handleDelete(product._id)}
                     >
                       Delete
@@ -141,7 +147,6 @@ const ManageItems = () => {
         </table>
       </div>
 
-      {/* Edit Product Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
@@ -168,9 +173,12 @@ const ManageItems = () => {
               <label className="block text-sm font-medium text-gray-700">Image</label>
               <input
                 type="file"
-                onChange={(e) => setEditingProduct({ ...editingProduct, image: e.target.files[0] })}
+                onChange={handleImageChange}
                 className="mt-1 p-2 w-full border rounded-md"
               />
+              {editingProduct.image && (
+                <img src={editingProduct.image} alt="Preview" className="mt-2 w-32 h-32 object-cover" />
+              )}
             </div>
             <div className="mb-2">
               <label className="block text-sm font-medium text-gray-700">Price</label>
@@ -183,17 +191,12 @@ const ManageItems = () => {
             </div>
             <div className="mb-2">
               <label className="block text-sm font-medium text-gray-700">Category</label>
-              <select
+              <input
+                type="text"
                 value={editingProduct.category}
                 onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}
                 className="mt-1 p-2 w-full border rounded-md"
-              >
-                {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
             <div className="flex justify-end mt-4">
               <button
