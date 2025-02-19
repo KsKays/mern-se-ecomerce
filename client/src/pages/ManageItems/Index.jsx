@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import ProductService from '../../services/product.service';
-import Swal from 'sweetalert2';
+import React, { useState, useEffect } from "react";
+import ProductService from "../../services/product.service";
+import Swal from "sweetalert2";
 
 const ManageItems = () => {
   const [products, setProducts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState({
-    _id: '',
-    name: '',
-    description: '',
+    _id: "",
+    name: "",
+    description: "",
     image: null,
-    price: '',
-    category: ''
+    price: "",
+    category: "",
   });
-  const [imageFile, setImageFile] = useState(null);  // State for managing new image file
+  const [imageFile, setImageFile] = useState(null); // State for managing new image file
 
   useEffect(() => {
     loadProducts();
@@ -21,11 +21,11 @@ const ManageItems = () => {
 
   const loadProducts = () => {
     ProductService.getAllProducts()
-      .then(response => {
+      .then((response) => {
         setProducts(response.data);
       })
-      .catch(error => {
-        console.error('Error fetching products:', error);
+      .catch((error) => {
+        console.error("Error fetching products:", error);
       });
   };
 
@@ -36,31 +36,31 @@ const ManageItems = () => {
       description: product.description,
       image: product.image, // Keep existing image URL for display
       price: product.price,
-      category: product.category
+      category: product.category,
     });
-    setImageFile(null);  // Clear any previously selected image file
+    setImageFile(null); // Clear any previously selected image file
     setIsModalOpen(true);
   };
 
   const handleDelete = (id) => {
     Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "This action cannot be undone!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
         ProductService.deleteProduct(id)
           .then(() => {
-            setProducts(products.filter(product => product._id !== id));
-            Swal.fire('Deleted!', 'Product has been removed.', 'success');
+            setProducts(products.filter((product) => product._id !== id));
+            Swal.fire("Deleted!", "Product has been removed.", "success");
           })
-          .catch(error => {
-            console.error('Error deleting product:', error);
-            Swal.fire('Error!', 'Failed to delete product.', 'error');
+          .catch((error) => {
+            console.error("Error deleting product:", error);
+            Swal.fire("Error!", "Failed to delete product.", "error");
           });
       }
     });
@@ -68,43 +68,53 @@ const ManageItems = () => {
 
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
-      setImageFile(e.target.files[0]);  // Set new image file
+      setImageFile(e.target.files[0]); // Set new image file
       setEditingProduct({
         ...editingProduct,
-        image: URL.createObjectURL(e.target.files[0]) // Update preview image
+        image: URL.createObjectURL(e.target.files[0]), // Update preview image
       });
     }
   };
 
   const handleUpdate = () => {
     const formData = new FormData();
-    formData.append('name', editingProduct.name);
-    formData.append('description', editingProduct.description);
+    formData.append("name", editingProduct.name);
+    formData.append("description", editingProduct.description);
     if (imageFile) {
-      formData.append('image', imageFile);
+      formData.append("image", imageFile);
     }
-    formData.append('price', editingProduct.price);
-    formData.append('category', editingProduct.category); // Update the category directly
+    formData.append("price", editingProduct.price);
+    formData.append("category", editingProduct.category); // Update the category directly
 
     ProductService.updateProduct(editingProduct._id, formData)
       .then(() => {
-        setProducts(products.map(product =>
-          product._id === editingProduct._id ? { ...product, ...editingProduct, image: editingProduct.image } : product
-        ));
+        setProducts(
+          products.map((product) =>
+            product._id === editingProduct._id
+              ? { ...product, ...editingProduct, image: editingProduct.image }
+              : product
+          )
+        );
         setIsModalOpen(false);
-        Swal.fire('Updated!', 'Product has been updated successfully.', 'success');
+        Swal.fire(
+          "Updated!",
+          "Product has been updated successfully.",
+          "success"
+        );
       })
-      .catch(error => {
-        console.error('Error updating product:', error);
-        Swal.fire('Error!', 'Failed to update product.', 'error');
+      .catch((error) => {
+        console.error("Error updating product:", error);
+        Swal.fire("Error!", "Failed to update product.", "error");
       });
   };
 
   return (
-    <div className="max-w-7xl mx-auto my-10 bg-white p-8 border border-gray-300 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Manage Products</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse border border-gray-300">
+    <div className="max-w-7xl mx-auto my-10 ">
+      <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
+        Manage Products
+      </h2>
+      <div className="overflow-x-auto rounded-lg">
+        <table className="w-full border-collapse border border-gray-300 ">
           <thead>
             <tr className="bg-gray-100">
               <th className="border p-3">Image</th>
@@ -119,7 +129,11 @@ const ManageItems = () => {
             {products.map((product) => (
               <tr key={product._id} className="hover:bg-gray-50">
                 <td className="border p-3">
-                  <img src={product.image} alt={product.name} className="w-16 h-16 object-cover" />
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-16 h-16 object-cover"
+                  />
                 </td>
                 <td className="border p-3">{product.name}</td>
                 <td className="border p-3">{product.description}</td>
@@ -134,7 +148,7 @@ const ManageItems = () => {
                       Edit
                     </button>
                     <button
-                      className="btn btn-error"
+                      className="btn "
                       onClick={() => handleDelete(product._id)}
                     >
                       Delete
@@ -152,49 +166,80 @@ const ManageItems = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-xl font-semibold mb-4">Edit Product</h2>
             <div className="mb-2">
-              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
               <input
                 type="text"
                 value={editingProduct.name}
-                onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
+                onChange={(e) =>
+                  setEditingProduct({ ...editingProduct, name: e.target.value })
+                }
                 className="mt-1 p-2 w-full border rounded-md"
               />
             </div>
             <div className="mb-2">
-              <label className="block text-sm font-medium text-gray-700">Description</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Description
+              </label>
               <input
                 type="text"
                 value={editingProduct.description}
-                onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
+                onChange={(e) =>
+                  setEditingProduct({
+                    ...editingProduct,
+                    description: e.target.value,
+                  })
+                }
                 className="mt-1 p-2 w-full border rounded-md"
               />
             </div>
             <div className="mb-2">
-              <label className="block text-sm font-medium text-gray-700">Image</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Image
+              </label>
               <input
                 type="file"
                 onChange={handleImageChange}
                 className="mt-1 p-2 w-full border rounded-md"
               />
               {editingProduct.image && (
-                <img src={editingProduct.image} alt="Preview" className="mt-2 w-32 h-32 object-cover" />
+                <img
+                  src={editingProduct.image}
+                  alt="Preview"
+                  className="mt-2 w-32 h-32 object-cover"
+                />
               )}
             </div>
             <div className="mb-2">
-              <label className="block text-sm font-medium text-gray-700">Price</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Price
+              </label>
               <input
                 type="number"
                 value={editingProduct.price}
-                onChange={(e) => setEditingProduct({ ...editingProduct, price: e.target.value })}
+                onChange={(e) =>
+                  setEditingProduct({
+                    ...editingProduct,
+                    price: e.target.value,
+                  })
+                }
                 className="mt-1 p-2 w-full border rounded-md"
               />
             </div>
             <div className="mb-2">
-              <label className="block text-sm font-medium text-gray-700">Category</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Category
+              </label>
               <input
                 type="text"
                 value={editingProduct.category}
-                onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}
+                onChange={(e) =>
+                  setEditingProduct({
+                    ...editingProduct,
+                    category: e.target.value,
+                  })
+                }
                 className="mt-1 p-2 w-full border rounded-md"
               />
             </div>

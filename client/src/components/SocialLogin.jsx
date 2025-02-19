@@ -3,6 +3,7 @@ import { FaGoogle, FaFacebook, FaGithub } from "react-icons/fa";
 import { AuthContext } from "../context/Authcontext";
 import Swal from "sweetalert2";
 import { useNavigate, useLocation } from "react-router";
+import UserServices from "../services/user.service";
 
 const SocialLogin = () => {
   const { signUpWithGoogle, signUpWithFacebook, signUpWithGithub } =
@@ -13,9 +14,10 @@ const SocialLogin = () => {
 
   const GithubSignUp = () => {
     signUpWithGithub()
-      .then((result) => {
+      .then(async (result) => {
         const user = result.user;
         console.log("User logged in:", user);
+        await UserServices.addUser(user.email);
         Swal.fire({
           icon: "success",
           title: "Github Singup Successfully",
@@ -32,9 +34,10 @@ const SocialLogin = () => {
 
   const googleSignUp = () => {
     signUpWithGoogle()
-      .then((result) => {
+      .then(async (result) => {
         const user = result.user;
         console.log("User logged in:", user);
+        await UserServices.addUser(user.email);
         Swal.fire({
           icon: "success",
           title: "Google Singup Successfully",
@@ -51,9 +54,10 @@ const SocialLogin = () => {
 
   const FaceBookSignUp = () => {
     signUpWithFacebook()
-      .then((result) => {
+      .then(async (result) => {
         const user = result.user;
         console.log("User logged in:", user);
+        await UserServices.addUser(user.email);
         Swal.fire({
           icon: "success",
           title: "Facebook Singup Successfully",

@@ -5,6 +5,7 @@ import { AuthContext } from "../context/Authcontext";
 import Swal from "sweetalert2";
 import { useNavigate, useLocation } from "react-router";
 import SocialLogin from "./SocialLogin";
+// import UserServices from "../services/user.service";
 
 const Modal = ({ name }) => {
   const { login, signUpWithGoogle, signUpWithGithub, signUpWithFacebook } =
@@ -23,6 +24,8 @@ const Modal = ({ name }) => {
     login(data.email, data.password)
       .then((result) => {
         const user = result.user;
+        //TODO
+
         console.log("User logged in:", user);
         Swal.fire({
           icon: "success",
@@ -40,9 +43,10 @@ const Modal = ({ name }) => {
 
   // const GithubSignUp = () => {
   //   signUpWithGithub()
-  //     .then((result) => {
+  //     .then(async (result) => {
   //       const user = result.user;
   //       console.log("User logged in:", user);
+  //       await UserServices.addUser(user.email);
   //       Swal.fire({
   //         icon: "success",
   //         title: "Github Singup Successfully",
@@ -59,9 +63,10 @@ const Modal = ({ name }) => {
 
   // const googleSignUp = () => {
   //   signUpWithGoogle()
-  //     .then((result) => {
+  //     .then(async (result) => {
   //       const user = result.user;
   //       console.log("User logged in:", user);
+  //       await UserServices.addUser(user.email);
   //       Swal.fire({
   //         icon: "success",
   //         title: "Google Singup Successfully",
@@ -78,9 +83,10 @@ const Modal = ({ name }) => {
 
   // const FaceBookSignUp = () => {
   //   signUpWithFacebook()
-  //     .then((result) => {
+  //     .then(async (result) => {
   //       const user = result.user;
   //       console.log("User logged in:", user);
+  //       await UserServices.addUser(user.email);
   //       Swal.fire({
   //         icon: "success",
   //         title: "Google Singup Successfully",

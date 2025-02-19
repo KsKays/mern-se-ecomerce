@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 export const AuthContext = createContext();
 import app from "../configs/firebase.config";
+import { Cookies } from "react-cookie";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -12,11 +13,19 @@ import {
   GithubAuthProvider,
   FacebookAuthProvider,
 } from "firebase/auth";
+import UserServices from "../services/user.service";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const auth = getAuth(app);
+
+  const cookies = new Cookies();
+
+  const getUser = () => {
+    const userInfo = cookies.get("user") || null;
+    return userInfo;
+  };
 
   const createUser = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -49,6 +58,8 @@ const AuthProvider = ({ children }) => {
 
   const authInfo = {
     user,
+    getUser,
+
     createUser,
     login,
     logout,
@@ -60,11 +71,18 @@ const AuthProvider = ({ children }) => {
 
   //check if user is logged in
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(user);
       if (currentUser) {
         setUser(currentUser);
         setIsLoading(false);
+        const { email } = currentUser;
+        const response = await UserServices.signJwt(email);
+        if (response.data) {
+          cookies.set("user", response.data);
+        }
+      } else {
+        cookies.remove("user");
       }
 
       setIsLoading(false);
