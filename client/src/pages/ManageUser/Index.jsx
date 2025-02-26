@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import UserServices from "../../services/user.service";
+import Swal from "sweetalert2";  // Import SweetAlert2
 
 const Index = () => {
   const [users, setUsers] = useState([]);
@@ -22,20 +23,67 @@ const Index = () => {
 
   const handleToggleRole = async (user) => {
     const newRole = user.role === "admin" ? "user" : "admin";
-    try {
-      await user.role === 'admin' ? UserServices.makeUser(user.email) : UserServices.makeAdmin(user.email);
-      fetchUsers();
-    } catch (error) {
-      console.error("Error updating user role", error);
+    
+    // SweetAlert Confirmation before switching role
+    const result = await Swal.fire({
+      title: `Are you sure you want to make this user ${newRole}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "Cancel",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        // Update role immediately in the UI before API call to improve user experience
+        const updatedUser = { ...user, role: newRole };
+        setUsers((prevUsers) =>
+          prevUsers.map((u) => (u.id === user.id ? updatedUser : u))
+        );
+
+        // Call the API to update the role on the server
+        if (newRole === "admin") {
+          await UserServices.makeAdmin(user.email);
+        } else {
+          await UserServices.makeUser(user.email);
+        }
+
+        Swal.fire({
+          title: "Role Updated!",
+          icon: "success",
+        });
+      } catch (error) {
+        console.error("Error updating user role", error);
+        // Revert the role change if the API call fails
+        const revertedUser = { ...user, role: user.role };
+        setUsers((prevUsers) =>
+          prevUsers.map((u) => (u.id === user.id ? revertedUser : u))
+        );
+      }
     }
   };
 
   const handleDeleteUser = async (id) => {
-    try {
-      await UserServices.deleteUser(id);
-      fetchUsers();
-    } catch (error) {
-      console.error("Error deleting user", error);
+    // SweetAlert Confirmation before deletion
+    const result = await Swal.fire({
+      title: "Are you sure you want to delete this user?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await UserServices.deleteUser(id);
+        fetchUsers();  // Re-fetch users after deletion
+        Swal.fire({
+          title: "User Deleted!",
+          icon: "success",
+        });
+      } catch (error) {
+        console.error("Error deleting user", error);
+      }
     }
   };
 
