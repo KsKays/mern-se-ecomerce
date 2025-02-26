@@ -91,7 +91,7 @@ const DashBoardLayout = () => {
                 </a>
               </li>
               <li>
-                <a>
+                <a href="/Dashboard/User-manage">
                   <FaUser />
                   All Users
                 </a>

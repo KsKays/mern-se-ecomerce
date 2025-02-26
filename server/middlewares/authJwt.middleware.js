@@ -10,14 +10,25 @@ verifyToken = (req, res, next) => {
   }
   jwt.verify(token, secret, (err, decoded) => {
     if (err) return res.status(403).json({ message: "Access Forbidden!!" });
-    req.userId = decoded.id;
-    req.username = decoded.username;
+    req.role = decoded.role;
+    req.email = decoded.email;
     next();
   });
 };
 
+isAdmin = (req, res, next) => {
+  const { role, email} = req;
+  if(req.role !== "admin"){
+    return res.status(403).send({message: "Require Admin Role!"});
+  }
+  next();
+};
+
+
+
 const authJwt = {
   verifyToken,
+  isAdmin
 };
 
 module.exports = authJwt;
