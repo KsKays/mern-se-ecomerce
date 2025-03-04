@@ -160,7 +160,12 @@ exports.getRoleByEmail = async (req, res) => {
     res.status(200).json({message: "User was deleted successfully"});
     
   } catch (error) {
-    ////*
+    {
+      res.status(500).json({
+        message: "Something error occurred while getting user role",
+        error: error.message,
+      });
+    }
   }
   
 }

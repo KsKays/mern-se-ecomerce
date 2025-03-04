@@ -31,7 +31,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/checkout-success",
-        element: <CheckOutSuccess />,
+        element: <CheckOut />,
       },
       {
         path: "/cart",
