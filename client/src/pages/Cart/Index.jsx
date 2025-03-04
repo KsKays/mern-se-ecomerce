@@ -5,6 +5,8 @@ import CartService from "../../services/cart.service";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../context/AuthContext";
 
+import PaymentButton from "./../../components/PaymentButton";
+
 const Index = () => {
   const [cart, refetch] = useCart();
   const { user } = useContext(AuthContext);
@@ -142,7 +144,7 @@ const Index = () => {
       });
     }
   };
-  
+
   // const handleDecrease = async (cartItem) => {
   //   if (cartItem.quantity > 1) {
   //     try {
@@ -160,7 +162,7 @@ const Index = () => {
   //       });
   //     }
   //   } else {
-  //     handleDeleteItem(cartItem); 
+  //     handleDeleteItem(cartItem);
   //   }
   // };
   const handleDecrease = async (cartItem) => {
@@ -183,7 +185,6 @@ const Index = () => {
       handleDeleteItem(cartItem);
     }
   };
-  
 
   return (
     <div>
@@ -287,7 +288,7 @@ const Index = () => {
                 <h3 className="text-lg font-semibold">Shopping</h3>
                 <p>Total Items:{cart.length}</p>
                 <p>Total Price:{formatPrice(totalPrice)}</p>
-                <button className="text-white bg-red btn">Process Checkout</button>
+                <PaymentButton cartItems={cart} />
               </div>
             </div>
           </div>

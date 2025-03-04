@@ -14,6 +14,7 @@ import ManageItems from "../pages/ManageItems/Index";
 import Profile from "../pages/Profile/Index";
 import AdminRoute from "../ProtectRoutes/AdminRoute";
 import ManageUser from "../pages/ManageUser/Index";
+import CheckOutSuccess from "../pages/CheckOutSuccess/Index";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
         element: <Shop />,
       },
       {
+        path: "/checkout-success",
+        element: <CheckOutSuccess />,
+      },
+      {
         path: "/cart",
         element: (
           <ProtectPage>
@@ -36,6 +41,7 @@ const router = createBrowserRouter([
           </ProtectPage>
         ),
       },
+
       {
         path: "/updateprofile",
         element: (

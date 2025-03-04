@@ -12,6 +12,7 @@ const PORT = process.env.PORT; //เชื่อมกับ PORT
 const DB_URL = process.env.DB_URL;
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./docs/swagger-output.json");
+const stripeRouter = require("./routers/stripe.router")
 
 //Connect to Mongo DB
 try {
@@ -34,6 +35,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/cart", cartRouter);
+app.use("/api/v1/stripe", stripeRouter)
 
 app.listen(PORT, () => {
   console.log("Server Running on http://localhost:" + PORT); //เชื่อมกับ PORT
