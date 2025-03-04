@@ -14,7 +14,7 @@ import ManageItems from "../pages/ManageItems/Index";
 import Profile from "../pages/Profile/Index";
 import AdminRoute from "../ProtectRoutes/AdminRoute";
 import ManageUser from "../pages/ManageUser/Index";
-import CheckOutSuccess from "../pages/CheckOutSuccess/Index";
+import CheckOut from "../pages/CheckOut/Index";
 
 const router = createBrowserRouter([
   {
