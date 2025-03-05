@@ -1,25 +1,25 @@
-const { response } = require("express");
 const Stripe = require("stripe");
-const stripe = new Stripe(process.env.SECRET_KEY_STRIPE);
+const stripe = Stripe(process.env.SECRET_KEY_STRIPE);
+const OrderModel = require("../models/Order");
+const CartModel = require("../models/Cart");
 
 exports.createCheckOutSession = async (req, res) => {
- console.log(req.body);
- 
   const cartItems = req.body.cart;
-  console.log(cartItems);
   const products = cartItems.map((item) => {
     return {
       productId: item.productId,
       quantity: item.quantity,
     };
   });
-  //customer info
+
+  //customer information
   const customer = await stripe.customers.create({
     metadata: {
       email: req.body.email.toString(),
       cart: JSON.stringify(products),
     },
   });
+
   const line_items = cartItems.map((item) => {
     return {
       price_data: {
@@ -29,7 +29,7 @@ exports.createCheckOutSession = async (req, res) => {
           images: [item.image],
           description: item.name,
           metadata: {
-            id: item.productId,
+            productId: item.productId,
           },
         },
         unit_amount: item.price * 100,
@@ -64,7 +64,6 @@ exports.createCheckOutSession = async (req, res) => {
           },
         },
       },
-
       {
         shipping_rate_data: {
           type: "fixed_amount",
@@ -86,6 +85,7 @@ exports.createCheckOutSession = async (req, res) => {
         },
       },
     ],
+
     phone_number_collection: {
       enabled: true,
     },
@@ -96,5 +96,78 @@ exports.createCheckOutSession = async (req, res) => {
     cancel_url: `${process.env.BASE_URL}/cart`,
   });
 
+  console.log(session);
+
   res.send({ url: session.url });
+};
+
+const clearCart = async (email) => {
+  try {
+    await CartModel.deleteMany({ email });
+    console.log("Cart is cleared");
+  } catch (error) {
+    res.status(500).send({
+      message:
+        error.message || "Something error occurred while clearing the cart",
+    });
+  }
+};
+
+const createOrder = async (customer, data) => {
+  const products = JSON.parse(customer.metadata.cart);
+  console.log("Products", products);
+  try {
+    const newOrder = await OrderModel.create({
+      email: customer.metadata.email,
+      customerId: data.customer,
+      products: products,
+      subtotal: data.amount_subtotal,
+      total: data.amount_total,
+      shipping: data.customer_details,
+      payment_status: data.payment_status,
+    });
+    if (newOrder) {
+      console.log("Order is created");
+      await clearCart(customer.metadata.email);
+    }
+  } catch (error) {
+    res.status(500).send({
+      message:
+        error.message || "Something error occurred while creating new order",
+    });
+  }
+};
+exports.webhook = async (req, res) => {
+  console.log("webhook is called");
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  console.log(endpointSecret);
+  const sig = req.headers["stripe-signature"];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    res.status(400).send({ message: `Webhook Error: ${err.message}` });
+  }
+
+  // Handle the event
+  switch (event.type) {
+    case "checkout.session.completed":
+      console.log("Payment received");
+      let data = event.data.object;
+      stripe.customers.retrieve(data.customer).then(async (customer) => {
+        try {
+          await createOrder(customer, data);
+        } catch (err) {
+          res.status(500).send({ message: `Webhook Error: ${err.message}` });
+        }
+      });
+      break;
+
+    // ... handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  res.status(200).end();
 };
