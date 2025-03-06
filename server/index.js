@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const productRouter = require("./routers/product.router");
 const userRouter = require("./routers/user.router");
 const cartRouter = require("./routers/cart.router");
+const orderRouter = require("./routers/order.router");
 const { applyTimestamps } = require("./models/Product");
 const app = express();
 const BASE_URL = process.env.BASE_URL; //
@@ -38,6 +39,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/stripe", stripeRouter);
+app.use("/api/v1/orders", orderRouter);
 
 app.listen(PORT, () => {
   console.log("Server Running on http://localhost:" + PORT); //เชื่อมกับ PORT
