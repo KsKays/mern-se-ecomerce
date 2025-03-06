@@ -4,6 +4,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ProductService from "../../services/product.service";
 import Card from "../../components/Card";
+//import productList from "./Product";
+
 const SampleNextArrow = (props) => {
   const { className, style, onClick } = props;
   return (
@@ -16,11 +18,25 @@ const SampleNextArrow = (props) => {
   );
 };
 
+const SamplePrevArrow = (props) => {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{ ...style, display: "block", background: "red" }}
+    >
+      Back
+    </div>
+  );
+};
+
 const Product = () => {
   const [products, setProducts] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       const response = await ProductService.getAllProducts();
+      console.log(response);
+
       const data = response.data;
       const special = data.filter((item) => item.category === "gadget");
       setProducts(special);
@@ -36,7 +52,7 @@ const Product = () => {
     slidesToScroll: 3,
     initialSlide: 1,
     nextArrow: <SampleNextArrow></SampleNextArrow>,
-    prevArrow: <SampleNextArrow></SampleNextArrow>,
+    prevArrow: <SamplePrevArrow></SamplePrevArrow>,
     responsive: [
       {
         breakpoint: 1024,

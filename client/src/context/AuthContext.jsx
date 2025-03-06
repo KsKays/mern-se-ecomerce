@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 export const AuthContext = createContext();
 import app from "../configs/firebase.config";
 import { Cookies } from "react-cookie";
+import UserServices from "../services/user.service";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -13,7 +14,6 @@ import {
   GithubAuthProvider,
   FacebookAuthProvider,
 } from "firebase/auth";
-import UserServices from "../services/user.service";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -51,6 +51,7 @@ const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, provider);
   };
 
+  // Sign up with Facebook
   const signUpWithFacebook = () => {
     const provider = new FacebookAuthProvider();
     return signInWithPopup(auth, provider);

@@ -4,117 +4,99 @@ import Swal from "sweetalert2";
 
 const ManageItems = () => {
   const [products, setProducts] = useState([]);
+  const [editProduct, setEditProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState({
-    _id: "",
-    name: "",
-    description: "",
-    image: null,
-    price: "",
-    category: "",
-  });
-  const [imageFile, setImageFile] = useState(null); // State for managing new image file
+  const [selectedImage, setSelectedImage] = useState(null); // เก็บไฟล์รูปที่เลือก
 
+  // โหลดรายการสินค้า
   useEffect(() => {
-    loadProducts();
+    fetchProducts();
   }, []);
 
-  const loadProducts = () => {
-    ProductService.getAllProducts()
-      .then((response) => {
-        setProducts(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      });
+  const fetchProducts = async () => {
+    try {
+      const response = await ProductService.getAllProducts();
+      setProducts(response.data);
+    } catch (error) {
+      Swal.fire("Error!", "Failed to fetch products.", "error");
+    }
   };
 
+  // เปิด Modal แก้ไขสินค้า
   const handleEdit = (product) => {
-    setEditingProduct({
-      _id: product._id,
-      name: product.name,
-      description: product.description,
-      image: product.image, // Keep existing image URL for display
-      price: product.price,
-      category: product.category,
-    });
-    setImageFile(null); // Clear any previously selected image file
+    setEditProduct({ ...product });
+    setSelectedImage(null); // เคลียร์ไฟล์รูปที่เลือกก่อนหน้า
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    Swal.fire({
+  // ลบสินค้า
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
       title: "Are you sure?",
-      text: "This action cannot be undone!",
+      text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        ProductService.deleteProduct(id)
-          .then(() => {
-            setProducts(products.filter((product) => product._id !== id));
-            Swal.fire("Deleted!", "Product has been removed.", "success");
-          })
-          .catch((error) => {
-            console.error("Error deleting product:", error);
-            Swal.fire("Error!", "Failed to delete product.", "error");
-          });
-      }
     });
-  };
 
-  const handleImageChange = (e) => {
-    if (e.target.files[0]) {
-      setImageFile(e.target.files[0]); // Set new image file
-      setEditingProduct({
-        ...editingProduct,
-        image: URL.createObjectURL(e.target.files[0]), // Update preview image
-      });
+    if (result.isConfirmed) {
+      try {
+        await ProductService.deleteProduct(id);
+        fetchProducts();
+        Swal.fire("Deleted!", "Your product has been deleted.", "success");
+      } catch (error) {
+        Swal.fire("Error!", "Failed to delete the product.", "error");
+      }
     }
   };
 
-  const handleUpdate = () => {
-    const formData = new FormData();
-    formData.append("name", editingProduct.name);
-    formData.append("description", editingProduct.description);
-    if (imageFile) {
-      formData.append("image", imageFile);
+  // อัปเดตไฟล์รูปภาพใหม่
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      setEditProduct((prev) => ({
+        ...prev,
+        image: URL.createObjectURL(file), // แสดงตัวอย่างภาพใหม่
+      }));
     }
-    formData.append("price", editingProduct.price);
-    formData.append("category", editingProduct.category); // Update the category directly
+  };
 
-    ProductService.updateProduct(editingProduct._id, formData)
-      .then(() => {
-        setProducts(
-          products.map((product) =>
-            product._id === editingProduct._id
-              ? { ...product, ...editingProduct, image: editingProduct.image }
-              : product
-          )
-        );
-        setIsModalOpen(false);
-        Swal.fire(
-          "Updated!",
-          "Product has been updated successfully.",
-          "success"
-        );
-      })
-      .catch((error) => {
-        console.error("Error updating product:", error);
-        Swal.fire("Error!", "Failed to update product.", "error");
-      });
+  // บันทึกการแก้ไขสินค้า
+  const handleSaveEdit = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("name", editProduct.name);
+      formData.append("description", editProduct.description);
+      formData.append("price", editProduct.price);
+      formData.append("category", editProduct.category);
+
+      if (selectedImage) {
+        formData.append("file", selectedImage); // อัปโหลดภาพใหม่ถ้ามี
+      }
+
+      await ProductService.updateProduct(editProduct._id, formData);
+      fetchProducts(); // โหลดข้อมูลใหม่หลังอัปเดต
+      setIsModalOpen(false);
+      Swal.fire(
+        "Updated!",
+        "Product has been updated successfully.",
+        "success"
+      );
+    } catch (error) {
+      Swal.fire("Error!", "Failed to update the product.", "error");
+    }
   };
 
   return (
-    <div className="max-w-7xl mx-auto my-10 ">
+    <div className="max-w-7xl mx-auto my-10">
       <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
         Manage Products
       </h2>
       <div className="overflow-x-auto rounded-lg">
-        <table className="w-full border-collapse border border-gray-300 ">
+        <table className="w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-100">
               <th className="border p-3">Image</th>
@@ -148,7 +130,7 @@ const ManageItems = () => {
                       Edit
                     </button>
                     <button
-                      className="btn "
+                      className="btn"
                       onClick={() => handleDelete(product._id)}
                     >
                       Delete
@@ -161,7 +143,7 @@ const ManageItems = () => {
         </table>
       </div>
 
-      {isModalOpen && (
+      {isModalOpen && editProduct && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-xl font-semibold mb-4">Edit Product</h2>
@@ -171,9 +153,9 @@ const ManageItems = () => {
               </label>
               <input
                 type="text"
-                value={editingProduct.name}
+                value={editProduct.name}
                 onChange={(e) =>
-                  setEditingProduct({ ...editingProduct, name: e.target.value })
+                  setEditProduct({ ...editProduct, name: e.target.value })
                 }
                 className="mt-1 p-2 w-full border rounded-md"
               />
@@ -184,10 +166,10 @@ const ManageItems = () => {
               </label>
               <input
                 type="text"
-                value={editingProduct.description}
+                value={editProduct.description}
                 onChange={(e) =>
-                  setEditingProduct({
-                    ...editingProduct,
+                  setEditProduct({
+                    ...editProduct,
                     description: e.target.value,
                   })
                 }
@@ -200,12 +182,12 @@ const ManageItems = () => {
               </label>
               <input
                 type="file"
-                onChange={handleImageChange}
+                onChange={handleFileChange}
                 className="mt-1 p-2 w-full border rounded-md"
               />
-              {editingProduct.image && (
+              {editProduct.image && (
                 <img
-                  src={editingProduct.image}
+                  src={editProduct.image}
                   alt="Preview"
                   className="mt-2 w-32 h-32 object-cover"
                 />
@@ -217,10 +199,10 @@ const ManageItems = () => {
               </label>
               <input
                 type="number"
-                value={editingProduct.price}
+                value={editProduct.price}
                 onChange={(e) =>
-                  setEditingProduct({
-                    ...editingProduct,
+                  setEditProduct({
+                    ...editProduct,
                     price: e.target.value,
                   })
                 }
@@ -233,10 +215,10 @@ const ManageItems = () => {
               </label>
               <input
                 type="text"
-                value={editingProduct.category}
+                value={editProduct.category}
                 onChange={(e) =>
-                  setEditingProduct({
-                    ...editingProduct,
+                  setEditProduct({
+                    ...editProduct,
                     category: e.target.value,
                   })
                 }
@@ -251,7 +233,7 @@ const ManageItems = () => {
                 Cancel
               </button>
               <button
-                onClick={handleUpdate}
+                onClick={handleSaveEdit}
                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
               >
                 Save

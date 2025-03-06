@@ -31,7 +31,6 @@ exports.createProduct = async (req, res) => {
        description: "Product created successfully"
     }
    */
-
   //File
   // //restruc จะไม่ได้รับ cover เข้ามาต้องจัดการก่อน >> middlewares
   const firebaseUrl = req.file.firebaseUrl;
@@ -40,7 +39,6 @@ exports.createProduct = async (req, res) => {
     return res.status(400).json({
       message: "All Fields is required",
     });
-
   const productDoc = await ProductModel.create({
     name,
     description,
@@ -80,16 +78,13 @@ exports.updateProduct = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.status(404).json({ message: "Product id is not Provided" });
+    return res.status(400).json({ message: "Product ID is required" });
   }
 
   try {
-    const productDoc = await ProductModel.findById(id);
-
-    if (!productDoc) {
-      return res.status(404).json({
-        message: "You cannot update this product",
-      });
+    const existingProduct = await ProductModel.findById(id);
+    if (!existingProduct) {
+      return res.status(404).json({ message: "Product not found" });
     }
 
     const { name, description, category, price } = req.body;
@@ -98,26 +93,32 @@ exports.updateProduct = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    productDoc.name = name;
-    productDoc.description = description;
-    productDoc.category = category;
-    productDoc.price = price;
+    const updatedData = {
+      name,
+      description,
+      category,
+      price,
+    };
 
-    if (req.file) {
-      const { firebaseUrl } = req.file;
-      productDoc.image = firebaseUrl;
+    // ถ้ามีการอัปโหลดรูปใหม่ ให้อัปเดต URL ของ Firebase Storage
+    if (req.file && req.file.firebaseUrl) {
+      updatedData.image = req.file.firebaseUrl;
     }
 
-    await productDoc.save();
+    // อัปเดตข้อมูลในฐานข้อมูล
+    const updatedProduct = await ProductModel.findByIdAndUpdate(id, updatedData, { new: true });
 
-    res.json(productDoc);
+    res.status(200).json({
+      message: "Product updated successfully",
+      product: updatedProduct,
+    });
   } catch (error) {
-    res.status(500).send({
-      message:
-        error.message || "Something went wrong while updating the product",
+    res.status(500).json({
+      message: error.message || "Something went wrong while updating the product",
     });
   }
 };
+
 
 exports.deleteProduct = async (req, res) => {
   const { id } = req.params;

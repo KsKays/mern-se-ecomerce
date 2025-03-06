@@ -56,11 +56,11 @@ async function uploadToFirebase(req, res, next) {
     //save location
     const storageRef = ref(
       firebaseStorage,
-      `SE-Shop/kays/${req.file.originalname}`
+      `SE-Shop/kays/${req?.file?.originalname}`
     );
     //file type
     const metadata = {
-      contentType: req.file.mimetype,
+      contentType: req?.file?.mimetype,
     };
     try {
       //uploading...

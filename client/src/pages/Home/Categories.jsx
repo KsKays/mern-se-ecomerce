@@ -15,7 +15,7 @@ const categoryItems = [
   },
   {
     id: 1,
-    title: "Gadgets",
+    title: "gadget",
     number: 86,
     image: "/images/home/category/img3.jpg",
   },
