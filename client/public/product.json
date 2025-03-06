@@ -7,6 +7,7 @@
     "category": "gadget"
   },
   {
+<<<<<<< HEAD
     "name": "Ergonomic Wireless Mouse",
     "description": "Comfortable wireless mouse with long battery life",
     "price": 1400,
@@ -166,5 +167,68 @@
     "price": 2500,
     "image": "https://picsum.photos/200",
     "category": "clothing"
+=======
+    "name": "Bluetooth Headphones",
+    "description": "Noise-cancelling Bluetooth headphones for immersive sound experience",
+    "price": 2200,
+    "image": "https://picsum.photos/201",
+    "category": "gadget"
+  },
+  {
+    "name": "Smartwatch",
+    "description": "Fitness and health tracking smartwatch with notifications and apps",
+    "price": 3999,
+    "image": "https://picsum.photos/202",
+    "category": "gadget"
+  },
+  {
+    "name": "Laptop Stand",
+    "description": "Adjustable laptop stand to improve posture and comfort",
+    "price": 899,
+    "image": "https://picsum.photos/207",
+    "category": "gadget"
+  },
+  {
+    "name": "Noise Cancelling Earphones",
+    "description": "In-ear noise-cancelling earphones for a quiet listening experience",
+    "price": 1800,
+    "image": "https://picsum.photos/209",
+    "category": "gadget"
+  },
+  {
+    "name": "Smartphone Holder",
+    "description": "Adjustable smartphone holder for desk or car use",
+    "price": 450,
+    "image": "https://picsum.photos/211",
+    "category": "gadget"
+  },
+  {
+    "name": "Wireless Earbuds",
+    "description": "Compact wireless earbuds with great sound quality",
+    "price": 1999,
+    "image": "https://picsum.photos/215",
+    "category": "gadget"
+  },
+  {
+    "name": "USB Flash Drive",
+    "description": "Portable USB flash drive with fast read/write speed",
+    "price": 300,
+    "image": "https://picsum.photos/216",
+    "category": "gadget"
+  },
+  {
+    "name": "LED Desk Lamp",
+    "description": "Energy-efficient LED desk lamp with adjustable brightness",
+    "price": 800,
+    "image": "https://picsum.photos/219",
+    "category": "gadget"
+  },
+  {
+    "name": "Digital Camera",
+    "description": "High-definition digital camera for capturing memories",
+    "price": 5500,
+    "image": "https://picsum.photos/222",
+    "category": "gadget"
+>>>>>>> 08a9e9bcc72e56301426bdb0048d8ac489e975e5
   }
 ]

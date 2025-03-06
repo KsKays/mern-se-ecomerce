@@ -15,6 +15,7 @@ import Profile from "../pages/Profile/Index";
 import AdminRoute from "../ProtectRoutes/AdminRoute";
 import ManageUser from "../pages/ManageUser/Index";
 import CheckOut from "../pages/CheckOut/Index";
+import ManageOrders from "../pages/ManageOrders/Index";
 
 const router = createBrowserRouter([
   {
@@ -91,6 +92,10 @@ const router = createBrowserRouter([
       {
         path: "user-manage",
         element: <ManageUser />,
+      },
+      {
+        path: "manage-orders",
+        element: <ManageOrders />,
       },
     ],
   },

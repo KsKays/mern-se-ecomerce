@@ -72,7 +72,7 @@ const DashBoardLayout = () => {
                 </a>
               </li>
               <li>
-                <a>
+                <a href="/Dashboard/Manage-orders">
                   <FaBagShopping />
                   Manage Orders
                 </a>
