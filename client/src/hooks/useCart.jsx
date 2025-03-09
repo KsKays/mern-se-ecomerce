@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/Authcontext";
 import { useContext } from "react";
 import CartService from "../services/cart.service";
 
