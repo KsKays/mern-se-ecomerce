@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import Profile from "./Profile";
 import Modal from "./Modal";
-import { AuthContext } from "../context/Authcontext";
+import { AuthContext } from "../context/AuthContext";
 import { FaUserCircle } from "react-icons/fa";
 //import UserProfile from "./UserProfile";
 

@@ -1,5 +1,5 @@
 import stripeService from "../services/stripe.service";
-import { AuthContext } from "../context/Authcontext";
+import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 
 const PaymentButton = ({ cartItems }) => {

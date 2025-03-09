@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from "react";
-import { AuthContext } from "../context/Authcontext";
+import { AuthContext } from "../context/AuthContext";
 import useCart from "../hooks/useCart";
 
 const Profile = () => {
