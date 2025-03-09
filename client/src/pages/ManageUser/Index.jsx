@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import UserServices from "../../services/user.service";
-import Swal from "sweetalert2";  // Import SweetAlert2
+import UserService from "../../services/user.service";
+import Swal from "sweetalert2"; // Import SweetAlert2
 
 const Index = () => {
   const [users, setUsers] = useState([]);
@@ -13,7 +13,7 @@ const Index = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await UserServices.getUser();
+      const response = await UserService.getUser();
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users", error);
@@ -23,7 +23,7 @@ const Index = () => {
 
   const handleToggleRole = async (user) => {
     const newRole = user.role === "admin" ? "user" : "admin";
-    
+
     // SweetAlert Confirmation before switching role
     const result = await Swal.fire({
       title: `Are you sure you want to make this user ${newRole}?`,
@@ -43,9 +43,9 @@ const Index = () => {
 
         // Call the API to update the role on the server
         if (newRole === "admin") {
-          await UserServices.makeAdmin(user.email);
+          await UserService.makeAdmin(user.email);
         } else {
-          await UserServices.makeUser(user.email);
+          await UserService.makeUser(user.email);
         }
 
         Swal.fire({
@@ -75,8 +75,8 @@ const Index = () => {
 
     if (result.isConfirmed) {
       try {
-        await UserServices.deleteUser(id);
-        fetchUsers();  // Re-fetch users after deletion
+        await UserService.deleteUser(id);
+        fetchUsers(); // Re-fetch users after deletion
         Swal.fire({
           title: "User Deleted!",
           icon: "success",

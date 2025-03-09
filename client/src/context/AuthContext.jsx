@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 export const AuthContext = createContext();
 import app from "../configs/firebase.config";
 import { Cookies } from "react-cookie";
-import UserServices from "../services/user.service";
+import UserService from "../services/user.service";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -60,7 +60,6 @@ const AuthProvider = ({ children }) => {
   const authInfo = {
     user,
     getUser,
-
     createUser,
     login,
     logout,
@@ -78,7 +77,7 @@ const AuthProvider = ({ children }) => {
         setUser(currentUser);
         setIsLoading(false);
         const { email } = currentUser;
-        const response = await UserServices.signJwt(email);
+        const response = await UserService.signJwt(email);
         if (response.data) {
           cookies.set("user", response.data);
         }

@@ -4,9 +4,10 @@ import { useForm } from "react-hook-form";
 import { AuthContext } from "../context/AuthContext";
 import Swal from "sweetalert2";
 import { useNavigate, useLocation } from "react-router";
+import UserService from "../services/user.service";
 
-const SignUp = () => {
-  const { createUser } = useContext(AuthContext);
+const SignUp = ({ isLogin }) => {
+  const { login, createUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location?.state?.from?.pathname || "/";
@@ -18,26 +19,56 @@ const SignUp = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    createUser(data.email, data.password)
-      .then((result) => {
-        const user = result.user;
-        console.log("User signed up:", user);
-        Swal.fire({
-          icon: "success",
-          title: "Signup Successful",
-          showConfirmButton: false,
-          timer: 1500,
+    if (isLogin) {
+      // Login logic
+      login(data.email, data.password)
+        .then((result) => {
+          const user = result.user;
+          console.log(user);
+          Swal.fire({
+            title: "Login Successful",
+            text: "You have logged in successfully!",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false,
+          }).then(() => {
+            navigate(from); // Navigate to the original page or home
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          Swal.fire({
+            title: "Login Failed",
+            text: "Invalid email or password",
+            icon: "error",
+          });
         });
-        navigate(from, { replace: true });
-      })
-      .catch((error) => {
-        console.error("Signup failed:", error.message);
-        Swal.fire({
-          icon: "error",
-          title: "Signup Failed",
-          text: error.message,
+    } else {
+      // Register login
+      createUser(data.email, data.password)
+        .then(async (result) => {
+          const user = result.user;
+          console.log(user);
+          await UserService.addUser(user.email);
+          Swal.fire({
+            title: "Registration Successful",
+            text: "You have registered successfully!",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false,
+          }).then(() => {
+            navigate(from); // Navigate to the original page or home
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          Swal.fire({
+            title: "Registration Failed",
+            text: "An error occurred during registration.",
+            icon: "error",
+          });
         });
-      });
+    }
   };
 
   return (

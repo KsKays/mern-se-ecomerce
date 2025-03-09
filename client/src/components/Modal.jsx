@@ -5,7 +5,7 @@ import { AuthContext } from "../context/AuthContext";
 import Swal from "sweetalert2";
 import { useNavigate, useLocation } from "react-router";
 import SocialLogin from "./SocialLogin";
-// import UserServices from "../services/user.service";
+// import UserService from "../services/user.service";
 
 const Modal = ({ name }) => {
   const { login, signUpWithGoogle, signUpWithGithub, signUpWithFacebook } =
@@ -24,7 +24,6 @@ const Modal = ({ name }) => {
     login(data.email, data.password)
       .then((result) => {
         const user = result.user;
-        //TODO
 
         console.log("User logged in:", user);
         Swal.fire({
@@ -40,66 +39,6 @@ const Modal = ({ name }) => {
         console.error("Login failed:", error.message);
       });
   };
-
-  // const GithubSignUp = () => {
-  //   signUpWithGithub()
-  //     .then(async (result) => {
-  //       const user = result.user;
-  //       console.log("User logged in:", user);
-  //       await UserServices.addUser(user.email);
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Github Singup Successfully",
-  //         showConfirmButton: false,
-  //         timer: 1500,
-  //       });
-  //       document.getElementById("login").close();
-  //       navigate(from, { replace: true });
-  //     })
-  //     .catch((error) => {
-  //       console.error("Login failed:", error.message);
-  //     });
-  // };
-
-  // const googleSignUp = () => {
-  //   signUpWithGoogle()
-  //     .then(async (result) => {
-  //       const user = result.user;
-  //       console.log("User logged in:", user);
-  //       await UserServices.addUser(user.email);
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Google Singup Successfully",
-  //         showConfirmButton: false,
-  //         timer: 1500,
-  //       });
-  //       document.getElementById("login").close();
-  //       navigate(from, { replace: true });
-  //     })
-  //     .catch((error) => {
-  //       console.error("Login failed:", error.message);
-  //     });
-  // };
-
-  // const FaceBookSignUp = () => {
-  //   signUpWithFacebook()
-  //     .then(async (result) => {
-  //       const user = result.user;
-  //       console.log("User logged in:", user);
-  //       await UserServices.addUser(user.email);
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Google Singup Successfully",
-  //         showConfirmButton: false,
-  //         timer: 1500,
-  //       });
-  //       document.getElementById("login").close();
-  //       navigate(from, { replace: true });
-  //     })
-  //     .catch((error) => {
-  //       console.error("Login failed:", error.message);
-  //     });
-  // };
 
   return (
     <div>
@@ -160,17 +99,6 @@ const Modal = ({ name }) => {
             </a>
           </p>
 
-          {/* <div className="text-center space-x-3 mt-6">
-            <button className="btn btn-ghost btn-circle hover:bg-red hover:text-white">
-              <FaGoogle onClick={googleSignUp} />
-            </button>
-            <button className="btn btn-ghost btn-circle hover:bg-red hover:text-white">
-              <FaGithub onClick={GithubSignUp} />
-            </button>
-            <button className="btn btn-ghost btn-circle hover:bg-red hover:text-white">
-              <FaFacebook onClick={FaceBookSignUp} />
-            </button>
-          </div> */}
           <SocialLogin />
         </div>
       </dialog>

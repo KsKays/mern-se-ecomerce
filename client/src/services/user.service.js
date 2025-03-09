@@ -34,7 +34,7 @@ const getRoleByEmail = async (email) =>{
 }
 
 
-const UserServices = {
+const UserService = {
   signJwt,
   addUser,
   getUser,
@@ -45,4 +45,4 @@ const UserServices = {
   getRoleByEmail
 }
 
-export default UserServices;
+export default UserService;

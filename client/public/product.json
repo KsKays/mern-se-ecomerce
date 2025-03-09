@@ -2,29 +2,28 @@
   {
     "name": "Mechanical Keyboard Pro",
     "description": "Premium mechanical keyboard with hot-swappable switches",
-    "price": 4200,
+    "price": 420,
     "image": "https://picsum.photos/200",
     "category": "gadget"
   },
   {
-<<<<<<< HEAD
     "name": "Ergonomic Wireless Mouse",
     "description": "Comfortable wireless mouse with long battery life",
-    "price": 1400,
+    "price": 140,
     "image": "https://picsum.photos/200",
     "category": "gadget"
   },
   {
     "name": "Studio Headphones",
     "description": "High-fidelity studio headphones for professional audio work",
-    "price": 6500,
+    "price": 650,
     "image": "https://picsum.photos/200",
     "category": "gadget"
   },
   {
     "name": "Adjustable Laptop Stand",
     "description": "Portable aluminum stand for better posture",
-    "price": 1800,
+    "price": 180,
     "image": "https://picsum.photos/200",
     "category": "accessories"
   },
@@ -38,35 +37,35 @@
   {
     "name": "Tech Crewneck Sweatshirt",
     "description": "Minimalist sweatshirt with a stylish tech logo",
-    "price": 1600,
+    "price": 160,
     "image": "https://picsum.photos/200",
     "category": "clothing"
   },
   {
     "name": "Wireless Charging Pad",
     "description": "Fast wireless charger with sleek design",
-    "price": 2200,
+    "price": 220,
     "image": "https://picsum.photos/200",
     "category": "accessories"
   },
   {
     "name": "Smartwatch X",
     "description": "Advanced smartwatch with fitness and health tracking",
-    "price": 4800,
+    "price": 480,
     "image": "https://picsum.photos/200",
     "category": "gadget"
   },
   {
     "name": "Noise Cancelling Earbuds",
     "description": "True wireless earbuds with active noise cancellation",
-    "price": 3200,
+    "price": 320,
     "image": "https://picsum.photos/200",
     "category": "gadget"
   },
   {
     "name": "Tech Sling Bag",
     "description": "Compact and stylish sling bag for tech gear",
-    "price": 2000,
+    "price": 200,
     "image": "https://picsum.photos/200",
     "category": "accessories"
   },
@@ -80,21 +79,21 @@
   {
     "name": "VR Motion Controller",
     "description": "Advanced motion controller for VR gaming",
-    "price": 7000,
+    "price": 700,
     "image": "https://picsum.photos/200",
     "category": "gadget"
   },
   {
     "name": "Adjustable Gaming Chair",
     "description": "Premium gaming chair with ergonomic support",
-    "price": 13500,
+    "price": 135,
     "image": "https://picsum.photos/200",
     "category": "gadget"
   },
   {
     "name": "Blue Light Protection Glasses",
     "description": "Reduces eye strain from prolonged screen use",
-    "price": 1500,
+    "price": 150,
     "image": "https://picsum.photos/200",
     "category": "accessories"
   },
@@ -108,28 +107,28 @@
   {
     "name": "Portable Bluetooth Speaker",
     "description": "Water-resistant speaker with high-quality sound",
-    "price": 2800,
+    "price": 280,
     "image": "https://picsum.photos/200",
     "category": "gadget"
   },
   {
     "name": "Smart Ring Pro",
     "description": "Lightweight smart ring with health monitoring",
-    "price": 4000,
+    "price": 400,
     "image": "https://picsum.photos/200",
     "category": "accessories"
   },
   {
     "name": "Cyber Coffee Mug",
     "description": "Smart mug with temperature control",
-    "price": 1800,
+    "price": 180,
     "image": "https://picsum.photos/200",
     "category": "swag"
   },
   {
     "name": "Tech Sticker Collection",
     "description": "A set of premium stickers featuring tech and coding designs",
-    "price": 300,
+    "price": 350,
     "image": "https://picsum.photos/200",
     "category": "swag"
   },
@@ -143,92 +142,29 @@
   {
     "name": "Snapback Tech Cap",
     "description": "Adjustable cap with embroidered tech emblem",
-    "price": 1200,
+    "price": 120,
     "image": "https://picsum.photos/200",
     "category": "swag"
   },
   {
     "name": "Insulated Tech Water Bottle",
     "description": "Keeps drinks cold for 24 hours and hot for 12",
-    "price": 1400,
+    "price": 140,
     "image": "https://picsum.photos/200",
     "category": "swag"
   },
   {
     "name": "RGB Gaming Desk Mat",
     "description": "Oversized desk mat with customizable RGB lighting",
-    "price": 2200,
+    "price": 220,
     "image": "https://picsum.photos/200",
     "category": "gadget"
   },
   {
     "name": "Futuristic Cyber Hoodie",
     "description": "High-quality hoodie with a cyberpunk design",
-    "price": 2500,
+    "price": 250,
     "image": "https://picsum.photos/200",
     "category": "clothing"
-=======
-    "name": "Bluetooth Headphones",
-    "description": "Noise-cancelling Bluetooth headphones for immersive sound experience",
-    "price": 2200,
-    "image": "https://picsum.photos/201",
-    "category": "gadget"
-  },
-  {
-    "name": "Smartwatch",
-    "description": "Fitness and health tracking smartwatch with notifications and apps",
-    "price": 3999,
-    "image": "https://picsum.photos/202",
-    "category": "gadget"
-  },
-  {
-    "name": "Laptop Stand",
-    "description": "Adjustable laptop stand to improve posture and comfort",
-    "price": 899,
-    "image": "https://picsum.photos/207",
-    "category": "gadget"
-  },
-  {
-    "name": "Noise Cancelling Earphones",
-    "description": "In-ear noise-cancelling earphones for a quiet listening experience",
-    "price": 1800,
-    "image": "https://picsum.photos/209",
-    "category": "gadget"
-  },
-  {
-    "name": "Smartphone Holder",
-    "description": "Adjustable smartphone holder for desk or car use",
-    "price": 450,
-    "image": "https://picsum.photos/211",
-    "category": "gadget"
-  },
-  {
-    "name": "Wireless Earbuds",
-    "description": "Compact wireless earbuds with great sound quality",
-    "price": 1999,
-    "image": "https://picsum.photos/215",
-    "category": "gadget"
-  },
-  {
-    "name": "USB Flash Drive",
-    "description": "Portable USB flash drive with fast read/write speed",
-    "price": 300,
-    "image": "https://picsum.photos/216",
-    "category": "gadget"
-  },
-  {
-    "name": "LED Desk Lamp",
-    "description": "Energy-efficient LED desk lamp with adjustable brightness",
-    "price": 800,
-    "image": "https://picsum.photos/219",
-    "category": "gadget"
-  },
-  {
-    "name": "Digital Camera",
-    "description": "High-definition digital camera for capturing memories",
-    "price": 5500,
-    "image": "https://picsum.photos/222",
-    "category": "gadget"
->>>>>>> 08a9e9bcc72e56301426bdb0048d8ac489e975e5
   }
 ]

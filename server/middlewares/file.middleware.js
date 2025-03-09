@@ -23,7 +23,7 @@ const firebaseStorage = getStorage(app);
 //       null,
 //       file.fieldname + "-" + Date.now() + path.extname(file.originalname)
 //     );
-//   },F
+//   },
 // });
 
 const upload = multer({

@@ -15,25 +15,21 @@
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const UserModels = require("../models/User");
+const UserModel = require("../models/User");
 const salt = bcrypt.genSaltSync(10); //พิ่มความปลอดภัยในการเก็บรักษา password
 require("dotenv").config();
 const secret = process.env.SECRET;
 
+
 exports.sign = async (req, res) => {
   const { email } = req.body;
-  //1.Check email is existing in DB?
-  //เช็คว่ามีอีเมลนี้ในฐานข้อมูลหรือไม่
-
   if (!email) {
-    return res.status(400).send({ message: "Email is required" });
+    return res.status(400).json({ message: "Email is required" });
   }
-  const user = await UserModels.findOne({ email });
+  const user = await UserModel.findOne({ email });
   if (!user) {
-    return res.status(404).send({ message: "User not found" });
+    return res.status(404).json({ message: "User not found" });
   }
-
-  //2.Sign JWT token
   const token = jwt.sign({ email: user.email, role: user.role }, secret, {
     expiresIn: "1h",
   });
@@ -46,31 +42,36 @@ exports.sign = async (req, res) => {
   res.status(200).json(userInfo);
 };
 
+
 exports.addUser = async (req, res) => {
-  const { email } = req.body;
+  try {
+     const { email } = req.body;
   //1.เช็คว่ามีอีเมลนี้ในฐานข้อมูลหรือไม่
   if (!email) {
-    return res.status(400).send({ message: "Email and Password is required" });
+    return res.status(400).json({ message: "Email are required" });
   }
-
-  try {
-    const existedUser = await UserModels.findOne({ email });
+    const existedUser = await UserModel.findOne({ email });
     if (existedUser) {
-      return res.status(200).send({ message: "Email is already existed" });
+      return res.status(200).json({ message: "User already exists" });
     }
-    const user = new UserModels({ email });
-    await user.save();
-    res.status(201).send(user);
+
+    // Create ผู้ใช้ใหม่
+    const newUser = new UserModel({ email });
+    await newUser.save();
+
+    //res.status(201).json({ message: "User added successfully" });
+    res.status(201).send(newUser);
   } catch (error) {
-    res.status(500).send({
-      message: error.message || "Something went wrong while adding a new user!",
+    res.status(500).json({
+      message: "Something error occurred while adding a new user",
+      error: error.message,
     });
   }
 };
 
 exports.getAllUser = async (req, res) => {
   try {
-    const users = await UserModels.find();
+    const users = await UserModel.find();
     if (!users) {
       return res.status(200).json({ message: "No User"})
     }
@@ -89,7 +90,7 @@ exports.updateUser = async (req, res) => {
     return res.status(400).json({message: "Email is required"})
   }
   try {
-    const user = await UserModels.findByIdAndUpdate(id,{email, role},{new:true});
+    const user = await UserModel.findByIdAndUpdate(id,{email, role},{new:true});
     if(!user){
       return res.status(404).json({message: "User not found"}) 
     }
@@ -104,7 +105,7 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   const {id} = req.params;
   try {
-    const user = await UserModels.findByIdAndDelete(id);
+    const user = await UserModel.findByIdAndDelete(id);
     if(!user){
       return res.status(404).json({message: "User not found"})
     }
@@ -119,7 +120,7 @@ exports.deleteUser = async (req, res) => {
 exports.makeAdmin = async (req, res) => {
   const {email} = req.params;
   try {
-    const user = await UserModels.findOneAndUpdate({email});
+    const user = await UserModel.findOneAndUpdate({email});
     if (!user) {
       return res.status(404).json({message: "User not found!"});
     }
@@ -136,7 +137,7 @@ exports.makeAdmin = async (req, res) => {
 exports.makeUser = async (req, res) => {
   const {email} = req.params;
   try {
-    const user = await UserModels.findOneAndUpdate({email});
+    const user = await UserModel.findOneAndUpdate({email});
     if (!user) {
       return res.status(404).json({message: "User not found!"});
     }
@@ -153,7 +154,7 @@ exports.makeUser = async (req, res) => {
 exports.getRoleByEmail = async (req, res) => {
   const {email} = res.params
   try {
-    const user = await UserModels.findOne({email})
+    const user = await UserModel.findOne({email})
     if (!user) {
         return res.status(404).json({message: "User not found"})
     }

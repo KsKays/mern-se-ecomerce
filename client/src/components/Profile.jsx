@@ -1,10 +1,19 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import useCart from "../hooks/useCart";
 
 const Profile = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, getUser } = useContext(AuthContext);
   const [cart, setCart] = useCart();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const userInfo = getUser();
+
+  useEffect(() => {
+    if (user) {
+      console.log("User Data:", userInfo);
+      setIsAdmin(userInfo?.role === "admin");
+    }
+  }, [user]);
 
   return (
     <div>
@@ -70,6 +79,14 @@ const Profile = () => {
           tabIndex={0}
           className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
         >
+          {isAdmin && (
+            <li>
+              <a href="/dashboard" className="justify-between">
+                Dashboard
+                <span className="text-blue-700 badge">ADMIN</span>
+              </a>
+            </li>
+          )}
           <li>
             <a href="/profile" className="justify-between">
               Profile

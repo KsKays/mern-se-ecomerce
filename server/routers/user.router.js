@@ -10,7 +10,6 @@ router.post("/",  userController.addUser);
 
 router.get("/", userController.getAllUser);
 
-
 router.get("/role/:email", userController.getRoleByEmail);
 
 router.put("/:id",authJwt.verifyToken, userController.updateUser);
