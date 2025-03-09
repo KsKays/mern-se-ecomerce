@@ -110,7 +110,7 @@ const DashBoardLayout = () => {
                 <a>Order Tracking</a>
               </li>
               <li>
-                <a>Customer Suppo</a>
+                <a>Customer Support</a>
               </li>
             </ul>
           </div>
