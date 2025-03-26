@@ -49,9 +49,10 @@ function checkFileType(file, cb) {
 //upload to firebase storage
 async function uploadToFirebase(req, res, next) {
   if (!req.file) {
-    return res.status(400).json({
-      message: "Image is required",
-    });
+    // return res.status(400).json({
+    //   message: "Image is required",
+    // });
+    next();
   } else {
     //save location
     const storageRef = ref(
@@ -66,7 +67,7 @@ async function uploadToFirebase(req, res, next) {
       //uploading...
       const snapshot = await uploadBytesResumable(
         storageRef,
-        req.file.buffer,
+        req?.file?.buffer,
         metadata
       );
       //get url from firebase

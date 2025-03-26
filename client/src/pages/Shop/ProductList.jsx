@@ -122,6 +122,7 @@ const ProductList = () => {
         </div>
         {/** Pagination */}
       </div>
+
       <div className="section-container flex flex-row items-center justify-center my-8 flex-wrap gap-2">
         {Array.from({
           length: Math.ceil(filteredItems.length / itemsPerPage),
